@@ -1,0 +1,9 @@
+services:
+  api:
+    build: .
+    volumes:
+      - .:/app
+    environment:
+      - IS_DEVELOPMENT=True
+
+    command: python main.py

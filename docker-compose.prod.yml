@@ -1,0 +1,20 @@
+services:
+  api:
+    image: ghcr.io/tjdaley/kparalegal:1.1.1
+    restart: always
+    ports:
+      - "8093:8093"
+    environment:
+      - IS_DEVELOPMENT=False
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8093/api/healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

@@ -1,0 +1,8 @@
+fastapi
+httpx
+postgrest
+pydantic
+pydantic_settings
+supabase
+tenacity
+uvicorn
