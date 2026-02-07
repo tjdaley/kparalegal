@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
-import SEO from '../components/SEO'
+import { SEO } from '../components/SEO'
 
 const ProductDetailPage = () => {
   const { slug } = useParams()
