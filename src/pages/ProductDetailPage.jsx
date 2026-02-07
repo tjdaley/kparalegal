@@ -60,6 +60,7 @@ const ProductDetailPage = () => {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Service",
+    "sameAs": "https://en.wikipedia.org/wiki/Paralegal",
     "name": product.title,
     "description": product.description.substring(0, 200),
     "provider": {
@@ -77,7 +78,30 @@ const ProductDetailPage = () => {
     }),
     ...(product.order_link && {
       "url": product.order_link
-    })
+    }),
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": `${window.location.origin}`
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Services",
+          "item": `${window.location.origin}/services`
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": product.title,
+          "item": `${window.location.origin}/services/${product.slug}`
+        }
+      ]
+    },
   }
 
   return (

@@ -53,6 +53,19 @@ def products_sitemap_urls() -> List[Dict[str, str]]:
     urls: List[Dict[str, str]] = [{"loc": f"{settings.host_url}/products/{product.slug}", "lastmod": (product.updated_at or product.created_at).strftime("%Y-%m-%d")} for product in products]  # type: ignore
     return urls
 
+def static_page_urls() -> List[Dict[str, str]]:
+    """
+    Generate sitemap URLS for static pages
+    
+    :return: List of site map data
+    :rtype: List[Dict[str, str]]
+    """
+    urls = ['about', 'contact', 'privacy', 'blog', 'services', 'terms']
+    return [
+        {"loc": f"{settings.host_url}/{url}", "lastmod": "2026-02-07"} for url in urls
+    ]
+
+
 @app.get('/sitemap.xml')
 async def sitemap_xml():
     """
@@ -62,7 +75,8 @@ async def sitemap_xml():
     :rtype: Response
     """
     product_urls = products_sitemap_urls()
-    all_urls = product_urls
+    static_urls = static_page_urls()
+    all_urls = product_urls + static_urls
     url_entries = ""
     for url in all_urls:
         url_entries += f"""   <url>

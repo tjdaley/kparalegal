@@ -52,6 +52,7 @@ const LandingPage = () => {
       {
         "@type": "ProfessionalService",
         "name": "K-Paralegal, LLC",
+        "sameAs": "https://en.wikipedia.org/wiki/Paralegal",
         "image": "https://kparalegal.com/images/ogimage.png",
         "priceRange": "$$",
         "areaServed": "Texas",

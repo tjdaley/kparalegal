@@ -8,6 +8,7 @@ const AboutPage = () => {
     "@type": "Person",
     "name": "Marissa A. Daley",
     "jobTitle": "Certificated Paralegal",
+    "sameAs": "https://en.wikipedia.org/wiki/Paralegal",
     "worksFor": {
       "@type": "Organization",
       "name": "K-Paralegal, LLC"
