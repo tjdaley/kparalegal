@@ -2,7 +2,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet-async'
 
 const SEO = ({
-  title = 'K-Paralegal, LLC | Texas Family Law Specialist',
+  title = 'K-Paralegal, LLC | Texas Family Law Paralegal',
   description = 'Expert Texas Family Law paralegal services. Professional, reliable support for family law attorneys across Texas.',
   url = 'https://kparalegal.com',
   image = 'https://kparalegal.com/images/ogimage.png',

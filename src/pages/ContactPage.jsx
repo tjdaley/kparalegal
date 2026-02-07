@@ -38,7 +38,7 @@ const ContactPage = () => {
   return (
     <div className="w-full">
       <SEO
-        title="Contact K-Paralegal | Texas Family Law Support"
+        title="Contact K-Paralegal | Texas Family Law Paralegal Support"
         description="Get in touch with K-Paralegal, LLC for expert Texas Family Law paralegal services. Fast response times and professional support for attorneys."
         url="/contact"
         structuredData={structuredData}
