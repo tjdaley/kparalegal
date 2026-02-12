@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import { SEO } from '../components/SEO'
+import { apiService } from '../services/apiService'
 
 const ProductDetailPage = () => {
   const { slug } = useParams()
@@ -12,11 +13,7 @@ const ProductDetailPage = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`/api/products/${slug}`)
-        if (!response.ok) {
-          throw new Error('Product not found')
-        }
-        const data = await response.json()
+        const data = await apiService.getProductBySlug(slug)
         setProduct(data)
       } catch (err) {
         setError(err.message)

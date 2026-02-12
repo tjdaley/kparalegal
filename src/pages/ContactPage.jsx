@@ -1,8 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { SEO } from '../components/SEO'
+import { apiService } from '../services/apiService'
 
 const ContactPage = () => {
+  const scriptRef = useRef(null)
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "ContactPage",
@@ -15,22 +18,42 @@ const ContactPage = () => {
   }
 
   useEffect(() => {
-    // Load Cognito Forms script
-    const script = document.createElement('script')
-    script.src = 'https://www.cognitoforms.com/f/seamless.js'
-    script.setAttribute('data-key', 'wDxXHUzbukKC6A7d_bOxWw')
-    script.setAttribute('data-form', '11')
-    script.async = true
+    const fetchParameters = async () => {
+      try {
+        const data = await apiService.getParameters()
 
-    const formContainer = document.getElementById('cognito-form-container')
-    if (formContainer) {
-      formContainer.appendChild(script)
+        const formKey = data.find(p => p.key === 'contact_form_key')?.value
+        const formId = data.find(p => p.key === 'contact_form_id')?.value
+
+        if (!formKey || !formId) {
+          console.error('Missing contact form parameters')
+          return
+        }
+
+        // Load Cognito Forms script
+        const script = document.createElement('script')
+        script.src = 'https://www.cognitoforms.com/f/seamless.js'
+        script.setAttribute('data-key', formKey)
+        script.setAttribute('data-form', formId)
+        script.async = true
+        scriptRef.current = script
+
+        const formContainer = document.getElementById('cognito-form-container')
+        if (formContainer) {
+          formContainer.appendChild(script)
+        }
+      } catch (error) {
+        console.error('Error fetching parameters:', error)
+      }
     }
+
+    fetchParameters()
 
     // Cleanup function to remove the script when component unmounts
     return () => {
-      if (formContainer && script.parentNode === formContainer) {
-        formContainer.removeChild(script)
+      const formContainer = document.getElementById('cognito-form-container')
+      if (formContainer && scriptRef.current && scriptRef.current.parentNode === formContainer) {
+        formContainer.removeChild(scriptRef.current)
       }
     }
   }, [])

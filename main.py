@@ -5,10 +5,12 @@ from fastapi import FastAPI, Request, HTTPException, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from db.models.product import ProductInDB
+from db.models.parameter import ParameterInDB
 
 from util.loggerfactory import LoggerFactory
 from db.supabasemanager import SupabaseManager
 from db.repositories.product import ProductRepository
+from db.repositories.parameter import ParameterRepository
 from util.settings import settings
 
 LOGGER = LoggerFactory.create_logger(__name__)
@@ -25,7 +27,7 @@ app = FastAPI(
 # --- DATA MODELS (For response_model in endpoints) ---
 DB_MANAGER = SupabaseManager()
 PRODUCTS = ProductRepository(DB_MANAGER)
-
+PARAMETERS = ParameterRepository(DB_MANAGER)
 # --- HELPER FUNCTIONS & CLASSES ---
 
 
@@ -94,6 +96,41 @@ async def sitemap_xml():
 @app.get("/api/healthcheck")
 async def healthcheck():
     return {"status": "ok", "message": "Texas Law Brand Engine API is running."}
+
+# -- PARAMS ENDPOINTS ---
+
+@app.get("/api/parameters", response_model=List[ParameterInDB])
+async def get_parameters():
+    """
+    Get all parameters ordered by their id field.
+
+    :return: List of parameters
+    :rtype: List[ParameterInDB]
+    """
+    parameters, _ = PARAMETERS.select_many(condition={"environment": "*"}, sort_by="id", sort_direction="asc")
+    return parameters
+
+@app.get("/api/parameters/{environment}", response_model=List[ParameterInDB])
+async def get_parameters_by_environment(environment: str):
+    """
+    Get parameters by environment.
+
+    :param environment: The environment to filter parameters by (e.g., 'production', 'staging')
+    :type environment: str
+    :return: List of parameters for the specified environment
+    :rtype: List[ParameterInDB]
+    """
+
+    # First get all parameters (environment="*"), then get overrides for the specific environment and merge them
+    all_parameters, _ = PARAMETERS.select_many(condition={"environment": "*"}, sort_by="id", sort_direction="asc")
+    env_parameters, _ = PARAMETERS.select_many(condition={"environment": environment}, sort_by="id", sort_direction="asc")
+
+    # Create a dictionary to hold the merged parameters
+    merged_parameters = {param.key: param for param in all_parameters}
+    for param in env_parameters:
+        merged_parameters[param.key] = param
+
+    return list(merged_parameters.values())
 
 # --- PRODUCT ENDPOINTS ---
 

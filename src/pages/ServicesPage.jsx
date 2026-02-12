@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { SEO } from '../components/SEO'
+import { apiService } from '../services/apiService'
 
 const ServicesPage = () => {
   const [products, setProducts] = useState([])
@@ -45,11 +46,7 @@ const ServicesPage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('/api/products')
-        if (!response.ok) {
-          throw new Error('Failed to fetch products')
-        }
-        const data = await response.json()
+        const data = await apiService.getProducts()
         setProducts(data)
       } catch (err) {
         setError(err.message)
