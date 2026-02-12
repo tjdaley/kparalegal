@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: ghcr.io/tjdaley/kparalegal:1.1.5
+    image: ghcr.io/tjdaley/kparalegal:1.1.6
     restart: always
     ports:
       - "8093:8093"
